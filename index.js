@@ -1,13 +1,13 @@
 let config = {
     basic: {
-        upstream: "https://<Your URL>/",//上游地址
+        upstream: ["https://<Your URL1>/"],//上游地址 可填写多个
     },
 
     optimization: {
         cacheTtl: 1000, //该项决定边缘缓存时间 可调大
     },
     om: {
-        return: ["CN"],//此处填写世纪互联盘符名称
+        return: ["CN"],//如果需要重定向到世纪互联盘,请修改内容为世纪互联盘盘符Tag,不需要此功能请留空
         return_upstream: ["?admin", "?setup"],//不用动
         bypass: ["nocache"],//此处填写需要略过缓存的文件夹&&文件名
     }
@@ -17,11 +17,9 @@ addEventListener("fetch", (event) => {
 });
 
 async function fetchAndApply(request) {
-
     let requestURL = new URL(request.url);
-    let upstreamURL = new URL(config.basic.upstream);
+    let upstreamURL = new URL(config.basic.upstream[randomNum(0, config.basic.upstream.length-1)]);
 
-    console.log(requestURL);
     requestURL.protocol = upstreamURL.protocol;
     requestURL.host = upstreamURL.host;
     requestURL.pathname = upstreamURL.pathname + requestURL.pathname;
@@ -74,3 +72,13 @@ async function fetchAndApply(request) {
         statusText: fetchedResponse.statusText,
     });
 }
+function randomNum(minNum, maxNum) {
+    switch (arguments.length) {
+        case 1:
+            return parseInt(Math.random() * minNum + 1, 10);
+        case 2:
+            return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
+        default:
+            return 0;
+    }
+} 
