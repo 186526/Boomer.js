@@ -4,7 +4,7 @@ let config = {
     },
 
     optimization: {
-        cacheTtl: 1000, //该项决定边缘缓存时间 可调大
+        cacheTtl: 14400, //该项决定边缘缓存时间 可调大
     },
     om: {
         return: ["CN"],//如果需要重定向到世纪互联盘,请修改内容为世纪互联盘盘符Tag,不需要此功能请留空
@@ -17,8 +17,8 @@ addEventListener("fetch", (event) => {
 });
 
 async function fetchAndApply(request) {
-    let requestURL = new URL(request.url);
-    let upstreamURL = new URL(config.basic.upstream[randomNum(0, config.basic.upstream.length-1)]);
+    var requestURL = new URL(request.url);
+    var upstreamURL = new URL(config.basic.upstream[randomNum(0, config.basic.upstream.length - 1)]);
 
     requestURL.protocol = upstreamURL.protocol;
     requestURL.host = upstreamURL.host;
@@ -35,7 +35,13 @@ async function fetchAndApply(request) {
     for (let i in config.om.return) {
         if (requestURL.pathname.search(config.om.return[i]) != -1) {
             upstreamURL.pathname = requestURL.pathname;
-            return new Response(null, { status: 302, headers: { Location: upstreamURL } });
+            let a = '/';
+            for (let i of requestURL.pathname.split("/").slice(1, -1)) {
+                a = a + i + "/";
+            }
+            if (a !== requestURL.pathname&&requestURL.search!=="?preview") {
+                return new Response(null, { status: 302, headers: { Location: upstreamURL } });
+            }
         }
     }
     for (let i in config.om.return_upstream) {
