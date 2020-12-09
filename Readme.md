@@ -1,6 +1,6 @@
 # boomer.js
 
-## A Easy omtimizier for [OneManager-php](https://github.com/qkqpttgf/OneManager-php)
+## AA Easy optimizer for [OneManager-php](https://github.com/qkqpttgf/OneManager-php)
 
 如果需要使用OneManager进行E5API调用,请不要使用本程序!!!!!
 If you need to use OneManager to make E5API calls, please do not use this program
